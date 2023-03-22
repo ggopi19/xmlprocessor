@@ -38,13 +38,21 @@ def do_copy_work():
                     print(f'file not found: {file}')
                     file_copy_status['failure'] += 1
                     continue
+                # Get the absolute path of the file
                 source_file_abs_path = file.resolve()
+                # Get the last changed timestamp of file
                 last_changed_time = datetime.fromtimestamp(file.stat().st_atime) # tz=timezone.utc
+                # Create a folder name from timestamp of file
                 folder_name = last_changed_time.strftime('%Y-%m')
                 destination_folder_name = os.path.join(COPY_DESTINATION, folder_name)
                 destination_file_name = os.path.join(destination_folder_name, file.name)
                 # print(f'destination_folder_name: {destination_folder_name}')
-                if not os.path.isdir(destination_folder_name):
+                # Check file present, otherwise create it
+                if os.path.isdir(destination_folder_name):
+                    shutil.copyfile(source_file_abs_path, destination_file_name)
+                    file_copy_status['success'] += 1
+                    print(f'file [{source_file_abs_path}] successfully copied to [{destination_file_name}]')
+                else:
                     os.makedirs(destination_folder_name)
                     shutil.copyfile(source_file_abs_path, destination_file_name)
                     file_copy_status['success'] += 1
@@ -53,10 +61,6 @@ def do_copy_work():
                         f'and file [{source_file_abs_path}] '
                         f'successfully copied to [{destination_file_name}]'
                     )
-                else:
-                    shutil.copyfile(source_file_abs_path, destination_file_name)
-                    file_copy_status['success'] += 1
-                    print(f'file [{source_file_abs_path}] successfully copied to [{destination_file_name}]')
             except Exception as e:
                 print(f'Failed to copy the file {file}', e)
                 file_copy_status['failure'] += 1
