@@ -47,20 +47,13 @@ def do_copy_work():
                 destination_folder_name = os.path.join(COPY_DESTINATION, folder_name)
                 destination_file_name = os.path.join(destination_folder_name, file.name)
                 # print(f'destination_folder_name: {destination_folder_name}')
-                # Check file present, otherwise create it
-                if os.path.isdir(destination_folder_name):
-                    shutil.copyfile(source_file_abs_path, destination_file_name)
-                    file_copy_status['success'] += 1
-                    print(f'file [{source_file_abs_path}] successfully copied to [{destination_file_name}]')
-                else:
+                # Check directory present, otherwise create it
+                if not os.path.isdir(destination_folder_name):
                     os.makedirs(destination_folder_name)
-                    shutil.copyfile(source_file_abs_path, destination_file_name)
-                    file_copy_status['success'] += 1
-                    print(
-                        f'Directory created [{destination_folder_name}] '
-                        f'and file [{source_file_abs_path}] '
-                        f'successfully copied to [{destination_file_name}]'
-                    )
+                    print(f'Directory created [{destination_folder_name}]')
+                shutil.copyfile(source_file_abs_path, destination_file_name)
+                file_copy_status['success'] += 1
+                print(f'file [{source_file_abs_path}] successfully copied to [{destination_file_name}]')
             except Exception as e:
                 print(f'Failed to copy the file {file}', e)
                 file_copy_status['failure'] += 1
