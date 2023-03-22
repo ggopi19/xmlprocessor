@@ -12,7 +12,7 @@ FILE_PATTERN = [
     '*.jpg',
     '*.mp4'
 ]
-SOURCE_DIR = '.' # CURRENT DIRECTORY
+SOURCE_DIR = '.' # DOR represent CURRENT DIRECTORY
 COPY_DESTINATION = os.path.join('/tmp') # changes based on OS # c:/PHOTOS # /tmp, etc
 file_copy_status = {
     'success': 0,
@@ -27,7 +27,7 @@ def do_copy_work():
     """
     t1 = time.perf_counter()
     try:
-        path_lib_obj = pathlib.Path('.')
+        path_lib_obj = pathlib.Path(SOURCE_DIR)
         # Collect all the files
         files = chain(*[path_lib_obj.glob(f'**/{file_pattern}') for file_pattern in FILE_PATTERN])
         if not files:
